@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useSessionEvents, type CoralEvent } from "@/shared/use-reze";
+import { useSessionEvents } from "@/shared/use-reze";
+import type { CoralWebSocketEvent } from "@rezeclaw/coral-types/events";
 
 export function SessionDetailView() {
   const { namespace, sessionId } = useParams<{ namespace: string; sessionId: string }>();
@@ -142,7 +143,7 @@ function SystemEvent({ text }: { text: string }) {
   );
 }
 
-function eventToTimelineItem(event: CoralEvent): {
+function eventToTimelineItem(event: CoralWebSocketEvent): {
   kind: "message" | "system";
   senderName: string;
   text: string;

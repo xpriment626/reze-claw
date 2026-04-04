@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { streamSSE } from "hono/streaming";
 import type { CoralClient } from "../coral/client.js";
 import type { CoralWebSocketRelay } from "../coral/ws.js";
-import type { CreateSessionRequest, AgentGraphEntry } from "../coral/types.js";
+import type { CreateSessionRequest, AgentGraphEntry } from "@rezeclaw/coral-types/api";
 
 interface SessionCreateBody {
   task: string;

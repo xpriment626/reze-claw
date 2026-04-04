@@ -1,4 +1,5 @@
 import { connectMcp, callTool } from "./mcp.js";
+import type { WaitForMessageOutput, SendMessageOutput } from "@rezeclaw/coral-types/tools";
 
 const AGENT_NAME = process.env.CORAL_AGENT_ID ?? "bravo";
 
@@ -9,26 +10,24 @@ async function main() {
 
   // Step 1: Wait for someone to mention us
   console.log(`[${AGENT_NAME}] Waiting for mention...`);
-  const incoming = await callTool(client, "coral_wait_for_mention", {}) as {
-    message?: { senderName: string; text: string; threadId: string };
-  };
+  const { message } = await callTool(client, "coral_wait_for_mention", {}) as WaitForMessageOutput;
 
-  if (!incoming.message) {
+  if (!message) {
     console.log(`[${AGENT_NAME}] No message received`);
     return;
   }
 
   console.log(
-    `[${AGENT_NAME}] Received from ${incoming.message.senderName}: ${incoming.message.text}`
+    `[${AGENT_NAME}] Received from ${message.senderName}: ${message.text}`
   );
 
   // Step 2: Send "pong" back on the same thread
   console.log(`[${AGENT_NAME}] Sending pong...`);
   await callTool(client, "coral_send_message", {
-    threadId: incoming.message.threadId,
+    threadId: message.threadId,
     content: "pong",
-    mentions: [incoming.message.senderName],
-  });
+    mentions: [message.senderName],
+  }) as SendMessageOutput;
 
   console.log(`[${AGENT_NAME}] Done.`);
 }

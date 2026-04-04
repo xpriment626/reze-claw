@@ -3,7 +3,8 @@ import type {
   CreateSessionResponse,
   NamespaceState,
   SessionSnapshot,
-} from "./types.js";
+  RegistrySource,
+} from "@rezeclaw/coral-types/api";
 
 export class CoralClient {
   constructor(
@@ -70,10 +71,7 @@ export class CoralClient {
       headers: this.headers(),
     });
     if (!res.ok) throw new Error(`Coral registry fetch failed: ${res.status}`);
-    const sources: {
-      identifier: { type: string };
-      agents: { name: string; versions: string[] }[];
-    }[] = await res.json();
+    const sources: RegistrySource[] = await res.json();
 
     const agents: { name: string; version: string; summary?: string }[] = [];
     for (const source of sources) {

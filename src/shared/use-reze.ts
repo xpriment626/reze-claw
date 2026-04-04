@@ -1,9 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import type { CoralMessage } from "@rezeclaw/coral-types/domain";
+import type { SessionSnapshot } from "@rezeclaw/coral-types/api";
+import type { CoralWebSocketEvent } from "@rezeclaw/coral-types/events";
 
 const IS_TAURI = "__TAURI_INTERNALS__" in window;
 const REZE_BASE = IS_TAURI ? "http://localhost:3001" : "/reze";
 
-// --- Types ---
+// --- Types (Reze API response shapes) ---
 
 export interface RezeAgent {
   name: string;
@@ -18,35 +21,8 @@ export interface RezeSession {
   timestamp?: string;
 }
 
-export interface RezeSessionSnapshot {
-  agents?: Record<string, unknown> | unknown[];
-  threads?: {
-    id?: string;
-    participants?: string[];
-    messages?: {
-      id?: string;
-      senderName?: string;
-      text?: string;
-      timestamp?: string;
-      threadId?: string;
-      mentionNames?: string[];
-    }[];
-  }[];
-}
-
-export interface CoralEvent {
-  type: string;
-  name?: string;
-  threadId?: string;
-  message?: {
-    senderName?: string;
-    text?: string;
-    timestamp?: string;
-    threadId?: string;
-    mentionNames?: string[];
-  };
-  timestamp?: string;
-}
+// Re-export shared types used by components
+export type { SessionSnapshot, CoralWebSocketEvent, CoralMessage };
 
 // --- Health ---
 
@@ -121,8 +97,8 @@ export function useSessions() {
 // --- Session Detail (SSE) ---
 
 export function useSessionEvents(namespace: string, sessionId: string) {
-  const [snapshot, setSnapshot] = useState<RezeSessionSnapshot | null>(null);
-  const [events, setEvents] = useState<CoralEvent[]>([]);
+  const [snapshot, setSnapshot] = useState<SessionSnapshot | null>(null);
+  const [events, setEvents] = useState<CoralWebSocketEvent[]>([]);
   const [connected, setConnected] = useState(false);
   const eventSourceRef = useRef<EventSource | null>(null);
 
@@ -142,7 +118,7 @@ export function useSessionEvents(namespace: string, sessionId: string) {
 
     es.addEventListener("coral_event", (e) => {
       try {
-        const event: CoralEvent = JSON.parse(e.data);
+        const event: CoralWebSocketEvent = JSON.parse(e.data);
         setEvents((prev) => [...prev, event]);
       } catch {
         // bad data

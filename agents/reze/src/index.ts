@@ -9,7 +9,7 @@ import { sessionRoutes } from "./routes/sessions.js";
 import { chatRoutes } from "./routes/chat.js";
 
 const CORAL_API_URL = process.env.CORAL_API_URL ?? "http://localhost:5555";
-const CORAL_AUTH_TOKEN = process.env.CORAL_AUTH_TOKEN ?? "test";
+const CORAL_AUTH_TOKEN = process.env.CORAL_AUTH_TOKEN ?? "ligma";
 const REZE_PORT = parseInt(process.env.REZE_PORT ?? "3001", 10);
 
 const coral = new CoralClient(CORAL_API_URL, CORAL_AUTH_TOKEN);

@@ -1,4 +1,5 @@
 import { connectMcp, callTool } from "./mcp.js";
+import type { CreateThreadOutput, SendMessageOutput, WaitForMessageOutput } from "@rezeclaw/coral-types/tools";
 
 const AGENT_NAME = process.env.CORAL_AGENT_ID ?? "alpha";
 
@@ -9,31 +10,23 @@ async function main() {
 
   // Step 1: Create a thread with bravo as participant
   console.log(`[${AGENT_NAME}] Creating thread with bravo...`);
-  const threadResult = await callTool(client, "coral_create_thread", {
+  const { thread } = await callTool(client, "coral_create_thread", {
     threadName: "ping-pong",
     participantNames: ["bravo"],
-  }) as { thread?: { id: string } };
-  const threadId = threadResult.thread?.id;
-  console.log(`[${AGENT_NAME}] Thread created: ${threadId}`);
-
-  if (!threadId) {
-    console.error(`[${AGENT_NAME}] Failed to get thread ID`);
-    process.exit(1);
-  }
+  }) as CreateThreadOutput;
+  console.log(`[${AGENT_NAME}] Thread created: ${thread.id}`);
 
   // Step 2: Send "ping" mentioning bravo
   console.log(`[${AGENT_NAME}] Sending ping...`);
   await callTool(client, "coral_send_message", {
-    threadId,
+    threadId: thread.id,
     content: "ping",
     mentions: ["bravo"],
-  });
+  }) as SendMessageOutput;
 
   // Step 3: Wait for bravo's response
   console.log(`[${AGENT_NAME}] Waiting for response...`);
-  const response = await callTool(client, "coral_wait_for_message", {}) as {
-    message?: { senderName: string; text: string };
-  };
+  const response = await callTool(client, "coral_wait_for_message", {}) as WaitForMessageOutput;
 
   if (response.message) {
     console.log(
