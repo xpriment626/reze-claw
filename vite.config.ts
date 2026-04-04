@@ -21,5 +21,12 @@ export default defineConfig({
     watch: {
       ignored: ["**/src-tauri/**"],
     },
+    proxy: {
+      "/reze": {
+        target: "http://localhost:3001",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/reze/, ""),
+      },
+    },
   },
 });

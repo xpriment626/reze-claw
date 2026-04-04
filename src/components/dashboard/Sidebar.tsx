@@ -1,20 +1,28 @@
-import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { startDragging } from "@/shared/tauri";
+import { useRezeHealth } from "@/shared/use-reze";
 
 interface SidebarProps {
   onCollapse: () => void;
 }
 
-type Tab = "agents" | "config" | "logs";
+type Tab = "agents" | "config" | "sessions" | "logs";
+
+const tabs: { id: Tab; label: string; path: string }[] = [
+  { id: "agents", label: "Agents", path: "/agents" },
+  { id: "config", label: "Config", path: "/config" },
+  { id: "sessions", label: "Sessions", path: "/sessions" },
+  { id: "logs", label: "Logs", path: "/logs" },
+];
 
 export function Sidebar({ onCollapse }: SidebarProps) {
-  const [activeTab, setActiveTab] = useState<Tab>("agents");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const health = useRezeHealth();
 
-  const tabs: { id: Tab; label: string }[] = [
-    { id: "agents", label: "Agents" },
-    { id: "config", label: "Config" },
-    { id: "logs", label: "Logs" },
-  ];
+  const activeTab = tabs.find((t) => location.pathname.startsWith(t.path))?.id ?? "agents";
+  const coralStatus = health?.coral ?? "disconnected";
+  const rezeStatus = health ? "connected" : "disconnected";
 
   const handleDragStart = async (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest("button")) return;
@@ -60,7 +68,7 @@ export function Sidebar({ onCollapse }: SidebarProps) {
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => navigate(tab.path)}
             className={`w-full text-left px-4 py-2 text-sm transition-colors ${
               activeTab === tab.id
                 ? "text-claw-100 bg-claw-800"
@@ -73,10 +81,14 @@ export function Sidebar({ onCollapse }: SidebarProps) {
       </nav>
 
       {/* Status footer */}
-      <div className="px-3 py-3 border-t border-claw-700/50">
+      <div className="px-3 py-3 border-t border-claw-700/50 space-y-1">
         <div className="flex items-center gap-1.5">
-          <div className="w-1.5 h-1.5 rounded-full bg-claw-500" />
-          <span className="text-[10px] text-claw-500">Coral: disconnected</span>
+          <div className={`w-1.5 h-1.5 rounded-full ${rezeStatus === "connected" ? "bg-emerald-400" : "bg-claw-500"}`} />
+          <span className="text-[10px] text-claw-500">Reze: {rezeStatus}</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className={`w-1.5 h-1.5 rounded-full ${coralStatus === "connected" ? "bg-emerald-400" : "bg-claw-500"}`} />
+          <span className="text-[10px] text-claw-500">Coral: {coralStatus}</span>
         </div>
       </div>
     </div>
