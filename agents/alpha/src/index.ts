@@ -32,12 +32,12 @@ async function main() {
   // Step 3: Wait for bravo's response
   console.log(`[${AGENT_NAME}] Waiting for response...`);
   const response = await callTool(client, "coral_wait_for_message", {}) as {
-    message?: { senderName: string; content: string };
+    message?: { senderName: string; text: string };
   };
 
   if (response.message) {
     console.log(
-      `[${AGENT_NAME}] Received from ${response.message.senderName}: ${response.message.content}`
+      `[${AGENT_NAME}] Received from ${response.message.senderName}: ${response.message.text}`
     );
   } else {
     console.log(`[${AGENT_NAME}] No response received`);
