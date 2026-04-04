@@ -1,0 +1,11 @@
+edition = 3
+
+[agent]
+name = "bravo"
+version = "0.1.0"
+summary = "Responder agent that echoes messages back"
+
+[options]
+
+[runtimes.docker]
+image = "rezeclaw/bravo:latest"

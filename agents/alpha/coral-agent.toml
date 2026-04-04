@@ -1,0 +1,11 @@
+edition = 3
+
+[agent]
+name = "alpha"
+version = "0.1.0"
+summary = "Initiator agent that creates threads and sends the opening message"
+
+[options]
+
+[runtimes.docker]
+image = "rezeclaw/alpha:latest"
