@@ -4,6 +4,12 @@ edition = 3
 name = "alpha"
 version = "0.1.0"
 summary = "Initiator agent that creates threads and sends the opening message"
+description = "Test agent that kicks off a Coral session by creating a thread, adding participants, and sending the first message."
+readme = "Alpha is a deterministic test agent for validating Coral message-passing pipelines."
+
+[agent.license]
+type = "text"
+text = "MIT"
 
 [options]
 

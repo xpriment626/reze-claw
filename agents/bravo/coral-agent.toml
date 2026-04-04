@@ -4,6 +4,12 @@ edition = 3
 name = "bravo"
 version = "0.1.0"
 summary = "Responder agent that echoes messages back"
+description = "Test agent that waits for a mention and responds with a pong message on the same thread."
+readme = "Bravo is a deterministic test agent for validating Coral message-passing pipelines."
+
+[agent.license]
+type = "text"
+text = "MIT"
 
 [options]
 
