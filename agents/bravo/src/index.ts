@@ -11,11 +11,10 @@ async function main() {
   console.log(`[${AGENT_NAME}] Waiting for mention...`);
   const incoming = await callTool(client, "coral_wait_for_mention", {}) as {
     message?: { senderName: string; text: string; threadId: string };
-    status: string;
   };
 
   if (!incoming.message) {
-    console.log(`[${AGENT_NAME}] No message received (status: ${incoming.status})`);
+    console.log(`[${AGENT_NAME}] No message received`);
     return;
   }
 

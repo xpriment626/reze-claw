@@ -53,8 +53,13 @@ export function sessionRoutes(coral: CoralClient, wsRelay: CoralWebSocketRelay) 
       const body = await c.req.json<SessionCreateBody>();
 
       const agents: AgentGraphEntry[] = body.agents.map((a) => ({
-        id: { name: a.name, version: a.version ?? "0.1.0", source: "local" },
+        id: {
+          name: a.name,
+          version: a.version ?? "0.1.0",
+          registrySourceId: { type: "local" as const },
+        },
         name: a.name,
+        provider: { type: "local" as const, runtime: "executable" as const },
         options: a.options
           ? Object.fromEntries(
               Object.entries(a.options).map(([k, v]) => [k, { type: "string", value: v }])

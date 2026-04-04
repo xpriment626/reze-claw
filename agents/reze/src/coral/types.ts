@@ -21,9 +21,13 @@ export interface CreateSessionRequest {
 }
 
 export interface AgentGraphEntry {
-  id: { name: string; version: string; source: string };
+  id: {
+    name: string;
+    version: string;
+    registrySourceId: { type: "local" | "marketplace" | "linked" };
+  };
   name: string;
-  provider?: Record<string, unknown>;
+  provider: { type: "local"; runtime: "executable" | "docker" | "function" };
   options?: Record<string, { type: string; value: string }>;
   systemPrompt?: string;
   blocking?: boolean;
