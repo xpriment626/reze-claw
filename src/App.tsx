@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import { WidgetView } from "./components/widget/WidgetView";
 import { DashboardView } from "./components/dashboard/DashboardView";
 import { useAppMode } from "./shared/use-app-mode";
@@ -8,9 +8,9 @@ export default function App() {
 
   if (mode === "dashboard") {
     return (
-      <BrowserRouter>
+      <MemoryRouter initialEntries={["/agents"]}>
         <DashboardView onCollapse={collapse} />
-      </BrowserRouter>
+      </MemoryRouter>
     );
   }
 

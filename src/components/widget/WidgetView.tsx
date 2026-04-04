@@ -19,7 +19,8 @@ export function WidgetView({ onExpand }: WidgetViewProps) {
     setMessages((prev) => [...prev, { role: "user", content: message }]);
 
     try {
-      const res = await fetch("/reze/chat", {
+      const rezeBase = "__TAURI_INTERNALS__" in window ? "http://localhost:3001" : "/reze";
+      const res = await fetch(`${rezeBase}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message }),

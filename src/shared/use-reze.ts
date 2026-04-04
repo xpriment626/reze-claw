@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
-const REZE_BASE = "/reze";
+const IS_TAURI = "__TAURI_INTERNALS__" in window;
+const REZE_BASE = IS_TAURI ? "http://localhost:3001" : "/reze";
 
 // --- Types ---
 
