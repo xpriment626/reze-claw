@@ -7,5 +7,9 @@ summary = "Initiator agent that creates threads and sends the opening message"
 
 [options]
 
+[runtimes.executable]
+path = "npx"
+arguments = ["tsx", "src/index.ts"]
+
 [runtimes.docker]
 image = "rezeclaw/alpha:latest"

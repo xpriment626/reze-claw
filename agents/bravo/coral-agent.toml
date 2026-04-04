@@ -7,5 +7,9 @@ summary = "Responder agent that echoes messages back"
 
 [options]
 
+[runtimes.executable]
+path = "npx"
+arguments = ["tsx", "src/index.ts"]
+
 [runtimes.docker]
 image = "rezeclaw/bravo:latest"
