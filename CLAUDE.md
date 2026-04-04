@@ -2,6 +2,39 @@
 - default to Exa MCP for search
 - use github CLI to search repos when prompted
 
+# Project structure
+
+```
+reze-claw/
+  coral-server/            # Coral server (Kotlin/Gradle 8.14, runs natively)
+  packages/coral-types/    # @rezeclaw/coral-types — shared type definitions (single source of truth)
+  agents/
+    reze/                  # Gateway agent (Hono HTTP, port 3001)
+    alpha/                 # Test initiator agent (ping-pong)
+    bravo/                 # Test responder agent (ping-pong)
+    kali/                  # Image generation agent (not yet Coral-wired)
+  src/                     # React 19 frontend (Tauri webview)
+  src-tauri/               # Tauri native shell
+  scripts/dev.sh           # Unified launcher: Coral → Reze → Tauri
+```
+
+# Dev workflow
+
+- `pnpm dev:all` starts everything (Coral server, Reze gateway, Tauri app)
+- Coral auth token: `ligma` (coral-server/config.toml)
+- Agent registration: symlink agent dir into `~/.coral/agents/`, must have valid `coral-agent.toml`
+- All Coral/MCP types live in `@rezeclaw/coral-types` — never define inline
+- pnpm workspace: `packages/*` and `agents/*`
+- Frontend uses MemoryRouter (Tauri) and detects runtime for API base URL
+- Vite proxy prefix is `/reze/` (trailing slash — avoids matching `/reze-*.webp` assets)
+
+# Coral server
+
+- Run natively: `cd coral-server && CONFIG_FILE_PATH=./config.toml ./gradlew run`
+- Do NOT run in Docker when agents use ExecutableRuntime
+- Gradle 8.14 required (9.x breaks foojay plugin)
+- Agents discovered from `~/.coral/agents/*/coral-agent.toml`
+
 # Operating procedure for when in --dangerously-skip-permissions mode
 
 ## Uncertainty Handling
