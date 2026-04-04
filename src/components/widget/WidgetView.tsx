@@ -78,10 +78,10 @@ export function WidgetView({ onExpand }: WidgetViewProps) {
   return (
     <div className="h-screen flex flex-col">
       <Titlebar onExpand={onExpand} />
-      <div className="flex-1 relative bg-claw-950 overflow-hidden">
-        {messages.length === 0 ? (
-          <SceneView />
-        ) : (
+      {messages.length === 0 ? (
+        <SceneView />
+      ) : (
+        <div className="flex-1 relative bg-claw-950 overflow-hidden">
           <div className="h-full overflow-y-auto p-3 space-y-2">
             {messages.map((msg, i) => (
               <div
@@ -96,8 +96,8 @@ export function WidgetView({ onExpand }: WidgetViewProps) {
               </div>
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      )}
       <ChatInput onSend={handleSend} />
     </div>
   );

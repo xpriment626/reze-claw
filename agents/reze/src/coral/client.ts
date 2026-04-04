@@ -64,6 +64,27 @@ export class CoralClient {
     if (!res.ok) throw new Error(`Coral session delete failed: ${res.status}`);
   }
 
+  /** List agents from the Coral registry */
+  async listRegistryAgents(): Promise<{ name: string; version: string; summary?: string }[]> {
+    const res = await fetch(`${this.baseUrl}/api/v1/registry`, {
+      headers: this.headers(),
+    });
+    if (!res.ok) throw new Error(`Coral registry fetch failed: ${res.status}`);
+    const sources: {
+      identifier: { type: string };
+      agents: { name: string; versions: string[] }[];
+    }[] = await res.json();
+
+    const agents: { name: string; version: string; summary?: string }[] = [];
+    for (const source of sources) {
+      for (const agent of source.agents) {
+        const version = agent.versions[0] ?? "0.0.0";
+        agents.push({ name: agent.name, version });
+      }
+    }
+    return agents;
+  }
+
   /** Check if Coral server is reachable */
   async healthCheck(): Promise<boolean> {
     try {

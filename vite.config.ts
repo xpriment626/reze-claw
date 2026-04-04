@@ -22,7 +22,7 @@ export default defineConfig({
       ignored: ["**/src-tauri/**"],
     },
     proxy: {
-      "/reze": {
+      "/reze/": {
         target: "http://localhost:3001",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/reze/, ""),
