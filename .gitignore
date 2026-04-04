@@ -1,0 +1,20 @@
+node_modules/
+dist/
+.env
+.env.*
+*.local
+
+# Tauri
+src-tauri/target/
+
+# Agents
+agents/*/node_modules/
+agents/*/dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
