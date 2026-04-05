@@ -107,6 +107,12 @@ importers:
 
   agents/kali:
     dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.12.0
+        version: 1.29.0(zod@4.3.6)
+      '@rezeclaw/coral-types':
+        specifier: workspace:*
+        version: link:../../packages/coral-types
       replicate:
         specifier: ^1.0.0
         version: 1.4.0
