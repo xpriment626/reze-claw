@@ -25,7 +25,7 @@ app.use("*", cors({ origin: "*" }));
 app.route("/", healthRoutes(coral));
 app.route("/", agentRoutes(coral));
 app.route("/", sessionRoutes(coral, wsRelay));
-app.route("/", chatRoutes());
+app.route("/", chatRoutes(coral));
 
 console.log(`[Reze] Gateway agent starting on port ${REZE_PORT}`);
 console.log(`[Reze] Coral API: ${CORAL_API_URL}`);
