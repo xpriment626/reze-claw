@@ -6,23 +6,21 @@
 
 ```
 reze-claw/
-  coral-server/            # Coral server (Kotlin/Gradle 8.14, runs natively)
-  packages/coral-types/    # @rezeclaw/coral-types — shared type definitions (single source of truth)
+  coral.config.toml         # Coral server config (auth, agent discovery)
+  packages/coral-types/      # @rezeclaw/coral-types — shared type definitions (single source of truth)
   agents/
-    reze/                  # Gateway agent (Hono HTTP, port 3001)
-    alpha/                 # Test initiator agent (ping-pong)
-    bravo/                 # Test responder agent (ping-pong)
-    kali/                  # Image generation agent (not yet Coral-wired)
-  src/                     # React 19 frontend (Tauri webview)
-  src-tauri/               # Tauri native shell
-  scripts/dev.sh           # Unified launcher: Coral → Reze → Tauri
+    reze/                    # Gateway agent (Hono HTTP, port 3001) — NOT a Coral agent
+    alpha/                   # Test initiator agent (ping-pong)
+    bravo/                   # Test responder agent (ping-pong)
+    kali/                    # Image generation agent (Replicate)
+  src/                       # React 19 frontend (Tauri webview)
+  src-tauri/                 # Tauri native shell
+  scripts/dev.sh             # Unified launcher: Coral → Reze → Tauri
 ```
 
 # Dev workflow
 
 - `pnpm dev:all` starts everything (Coral server, Reze gateway, Tauri app)
-- Coral auth token: `ligma` (coral-server/config.toml)
-- Agent registration: symlink agent dir into `~/.coral/agents/`, must have valid `coral-agent.toml`
 - All Coral/MCP types live in `@rezeclaw/coral-types` — never define inline
 - pnpm workspace: `packages/*` and `agents/*`
 - Frontend uses MemoryRouter (Tauri) and detects runtime for API base URL
@@ -30,10 +28,12 @@ reze-claw/
 
 # Coral server
 
-- Run natively: `cd coral-server && CONFIG_FILE_PATH=./config.toml ./gradlew run`
-- Do NOT run in Docker when agents use ExecutableRuntime
-- Gradle 8.14 required (9.x breaks foojay plugin)
-- Agents discovered from `~/.coral/agents/*/coral-agent.toml`
+- Runs via npx: `CONFIG_FILE_PATH=./coral.config.toml npx coral-server@1.1.0 start`
+- Config: `coral.config.toml` in project root (auth, registry globs)
+- Agent discovery: `localAgents = ["agents/*"]` — scans for `coral-agent.toml` in each subdir
+- Reze is in `agents/` for workspace convenience but is NOT a Coral agent — no `coral-agent.toml` by design
+- Console UI: `http://localhost:5555/ui/console` (auth token: `ligma`)
+- Agent options (like API keys) are provided at session creation time and passed as env vars
 
 # Operating procedure for when in --dangerously-skip-permissions mode
 
