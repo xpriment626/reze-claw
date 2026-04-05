@@ -1,0 +1,9 @@
+[auth]
+keys = ["ligma"]
+
+[network]
+allowAnyHost = true
+
+[registry]
+localAgents = ["agents/*"]
+watchLocalAgents = true
