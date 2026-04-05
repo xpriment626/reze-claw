@@ -1,0 +1,27 @@
+edition = 3
+
+[agent]
+name = "kali"
+version = "0.1.0"
+summary = "Image generation agent powered by Replicate"
+description = "Generates images from text prompts using Flux models via the Replicate API. Accepts a prompt, returns an image URL."
+readme = "Kali wraps the Replicate API for image generation. Supports Flux 2 Pro/Dev models with configurable aspect ratios and resolutions."
+
+[agent.license]
+type = "text"
+text = "MIT"
+
+[options.REPLICATE_API_TOKEN]
+type = "string"
+required = true
+secret = true
+display.description = "Replicate API token for image generation"
+
+[runtimes.executable]
+path = "npx"
+arguments = ["tsx", "src/index.ts"]
+transport = "streamable_http"
+
+[runtimes.docker]
+image = "rezeclaw/kali"
+transport = "streamable_http"
