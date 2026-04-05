@@ -12,6 +12,13 @@ CORAL_PORT=5555
 REZE_PORT=3001
 CORAL_AUTH_TOKEN="${CORAL_AUTH_TOKEN:-ligma}"
 
+# Source .env for API keys (XAI_API_KEY, etc.)
+if [ -f "$ROOT_DIR/.env" ]; then
+  set -a
+  source "$ROOT_DIR/.env"
+  set +a
+fi
+
 # Track child PIDs for cleanup
 PIDS=()
 
