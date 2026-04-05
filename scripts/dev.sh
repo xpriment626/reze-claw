@@ -44,9 +44,18 @@ wait_for_port() {
 }
 
 # --- 1. Coral Server (via npx) ---
-echo "[dev] Starting Coral server via npx..."
+# Coral server requires Java 24+; use the system default or JAVA_HOME override
+if [ -z "${JAVA_HOME:-}" ]; then
+  JAVA_24_PLUS="$(/usr/libexec/java_home -v 24+ 2>/dev/null || true)"
+  if [ -n "$JAVA_24_PLUS" ]; then
+    export JAVA_HOME="$JAVA_24_PLUS"
+    export PATH="$JAVA_HOME/bin:$PATH"
+  fi
+fi
+echo "[dev] Starting Coral server via npx (JAVA_HOME=${JAVA_HOME:-system default})..."
 cd "$ROOT_DIR"
-CONFIG_FILE_PATH=./coral.config.toml npx coral-server@1.1.0 start &>/tmp/coral-server-dev.log &
+CONFIG_FILE_PATH=./coral.config.toml npx coral-server@1.1.0 start \
+  --registry.local-agents="$ROOT_DIR/agents/*" &>/tmp/coral-server-dev.log &
 PIDS+=($!)
 wait_for_port $CORAL_PORT "Coral" 120
 

@@ -4,9 +4,6 @@ dist/
 .env.*
 *.local
 
-# Coral server (separate upstream repo, not part of reze-claw)
-coral-server/
-
 # Tauri
 src-tauri/target/
 

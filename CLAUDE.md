@@ -28,9 +28,10 @@ reze-claw/
 
 # Coral server
 
-- Runs via npx: `CONFIG_FILE_PATH=./coral.config.toml npx coral-server@1.1.0 start`
-- Config: `coral.config.toml` in project root (auth, registry globs)
-- Agent discovery: `localAgents = ["agents/*"]` — scans for `coral-agent.toml` in each subdir
+- Runs via npx: `CONFIG_FILE_PATH=./coral.config.toml npx coral-server@1.1.0 start --registry.local-agents="$PWD/agents/*"`
+- Config: `coral.config.toml` in project root (auth, network settings)
+- Agent discovery: `--registry.local-agents` CLI arg with absolute path (relative paths don't resolve); scans for `coral-agent.toml` in each subdir
+- Requires Java 24+ (dev.sh auto-detects via `/usr/libexec/java_home`)
 - Reze is in `agents/` for workspace convenience but is NOT a Coral agent — no `coral-agent.toml` by design
 - Console UI: `http://localhost:5555/ui/console` (auth token: `ligma`)
 - Agent options (like API keys) are provided at session creation time and passed as env vars

@@ -5,5 +5,4 @@ keys = ["ligma"]
 allowAnyHost = true
 
 [registry]
-localAgents = ["agents/*"]
 watchLocalAgents = true
