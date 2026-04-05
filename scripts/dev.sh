@@ -6,7 +6,6 @@ set -euo pipefail
 # Ctrl+C kills all three cleanly.
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-CORAL_DIR="$ROOT_DIR/coral-server"
 REZE_DIR="$ROOT_DIR/agents/reze"
 
 CORAL_PORT=5555
@@ -22,8 +21,6 @@ cleanup() {
   for pid in "${PIDS[@]}"; do
     kill "$pid" 2>/dev/null || true
   done
-  # Stop Gradle daemon
-  cd "$CORAL_DIR" && ./gradlew --stop 2>/dev/null || true
   echo "[dev] Done."
   exit 0
 }
@@ -46,17 +43,19 @@ wait_for_port() {
   echo "[dev] $name is up (port $port, ${elapsed}s)"
 }
 
-# --- 1. Coral Server ---
-echo "[dev] Starting Coral server..."
-cd "$CORAL_DIR"
-CONFIG_FILE_PATH=./config.toml ./gradlew run &>/tmp/coral-server-dev.log &
+# --- 1. Coral Server (via npx) ---
+echo "[dev] Starting Coral server via npx..."
+cd "$ROOT_DIR"
+CONFIG_FILE_PATH=./coral.config.toml npx coral-server@1.1.0 start &>/tmp/coral-server-dev.log &
 PIDS+=($!)
 wait_for_port $CORAL_PORT "Coral" 120
 
 # --- 2. Reze Gateway ---
 echo "[dev] Starting Reze gateway..."
 cd "$REZE_DIR"
-CORAL_AUTH_TOKEN="$CORAL_AUTH_TOKEN" npx tsx src/index.ts &>/tmp/reze-dev.log &
+CORAL_API_URL="http://localhost:$CORAL_PORT" \
+CORAL_AUTH_TOKEN="$CORAL_AUTH_TOKEN" \
+npx tsx src/index.ts &>/tmp/reze-dev.log &
 PIDS+=($!)
 wait_for_port $REZE_PORT "Reze" 15
 
