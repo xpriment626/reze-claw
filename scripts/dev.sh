@@ -16,6 +16,7 @@ CORAL_AUTH_TOKEN="${CORAL_AUTH_TOKEN:-ligma}"
 PIDS=()
 
 cleanup() {
+  trap - SIGINT SIGTERM EXIT
   echo ""
   echo "[dev] Shutting down..."
   for pid in "${PIDS[@]}"; do
@@ -44,14 +45,15 @@ wait_for_port() {
 }
 
 # --- 1. Coral Server (via npx) ---
-# Coral server requires Java 24+; use the system default or JAVA_HOME override
-if [ -z "${JAVA_HOME:-}" ]; then
-  JAVA_24_PLUS="$(/usr/libexec/java_home -v 24+ 2>/dev/null || true)"
-  if [ -n "$JAVA_24_PLUS" ]; then
-    export JAVA_HOME="$JAVA_24_PLUS"
-    export PATH="$JAVA_HOME/bin:$PATH"
-  fi
+# Coral server requires Java 24+; find it regardless of current JAVA_HOME
+CORAL_JAVA="$(/usr/libexec/java_home -v 24+ 2>/dev/null || true)"
+if [ -z "$CORAL_JAVA" ]; then
+  echo "[dev] ERROR: Java 24+ required for Coral server but not found."
+  echo "[dev] Install via: brew install openjdk"
+  exit 1
 fi
+export JAVA_HOME="$CORAL_JAVA"
+export PATH="$JAVA_HOME/bin:$PATH"
 echo "[dev] Starting Coral server via npx (JAVA_HOME=${JAVA_HOME:-system default})..."
 cd "$ROOT_DIR"
 CONFIG_FILE_PATH=./coral.config.toml npx coral-server@1.1.0 start \
