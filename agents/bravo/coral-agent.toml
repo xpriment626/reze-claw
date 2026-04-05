@@ -16,6 +16,8 @@ text = "MIT"
 [runtimes.executable]
 path = "npx"
 arguments = ["tsx", "src/index.ts"]
+transport = "streamable_http"
 
 [runtimes.docker]
-image = "rezeclaw/bravo:latest"
+image = "rezeclaw/bravo"
+transport = "streamable_http"
